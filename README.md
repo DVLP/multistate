@@ -27,7 +27,7 @@ npm install multistate
 
 ### Basic usage
 
-```sh
+```javascript
 import { enhanceWebGLContext } from 'multistate'
 
 gl = canvas.getContext('webgl2')
@@ -56,7 +56,7 @@ console.log(gl.isEnabled(gl.CULL_FACE))
 
 ### Multiple state containers
 
-```sh
+```javascript
 // save the container once
 const stateContainerA = gl.createState()
 const stateContainerB = gl.createState()
@@ -73,7 +73,7 @@ gl.restoreState(stateContainerA)
 Forgetting to change some WebGL parameter back after setting it up for a particular draw call means that it will now affect all other draw calls. 
 Instead of meticulously keeping track of every change of WebGL state between drawing elements and unsetting previously set parameters you can just make a mess and clean up the state after each item is drawn. When running `restoreState` all the properties in `baseSetup` are checked against the current state and no WebGL commands will be sent unnecessarily.
 
-```sh
+```javascript
 const baseSetup = gl.createState()
 
 // Here set up the common settings like the viewport etc ...
