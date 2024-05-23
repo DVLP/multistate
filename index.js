@@ -23,7 +23,7 @@ THE SOFTWARE.
 **/
 
 const capabilities = ['BLEND', 'CULL_FACE', 'DEPTH_TEST', 'DITHER', 'POLYGON_OFFSET_FILL', 'SAMPLE_ALPHA_TO_COVERAGE', 'SAMPLE_COVERAGE', 'SCISSOR_TEST', 'STENCIL_TEST', 'RASTERIZER_DISCARD']
-const featureNameByInt = {}
+let featureNameByInt = {}
 
 const DEV_MODE = false
 const arr3Eq = (a, p0, p1, p2) => a[0] === p0 && a[1] === p1 && a[2] === p2
@@ -346,6 +346,7 @@ function wrapStatefulGLFunctions(gl) {
   gl.stencilOpSeparate = function stencilOpSeparate(face, fail, zfail, zpass) {
     const setFront = face === gl.FRONT || face === gl.FRONT_AND_BACK
     const setBack = face === gl.BACK || face === gl.FRONT_AND_BACK
+    let needsUpdate = false
     if (setFront && !arr3Eq(gl.state.stencilOp, fail, zfail, zpass)) {
       set3(gl.state.stencilOp, fail, zfail, zpass)
       needsUpdate = true
