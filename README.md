@@ -67,3 +67,31 @@ gl.restoreState(stateContainerB)
 gl.restoreState(stateContainerA)
 
 ```
+
+### Keeping WebGL state predictable
+
+Forgetting to change some WebGL parameter back after setting it up for a particular draw call means that it will now affect all other draw calls. 
+Instead of meticulously keeping track of every change of WebGL state between drawing elements and unsetting previously set parameters you can just make a mess and clean up the state after each item is drawn. When running `restoreState` all the properties in `baseSetup` are checked against the current state and no WebGL commands will be sent unnecessarily.
+
+```sh
+const baseSetup = gl.createState()
+
+// Here set up the common settings like the viewport etc ...
+
+gl.saveState(baseSetup)
+
+
+// Item 1 WebGl setup and draw call here ...
+
+gl.restoreState(baseSetup)
+
+// Item 2 WebGl setup and draw call here ...
+
+gl.restoreState(baseSetup)
+
+// Item 3 WebGl setup and draw call here ...
+
+gl.restoreState(baseSetup)
+
+
+```
