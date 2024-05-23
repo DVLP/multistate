@@ -3,18 +3,18 @@
 **Save** and **restore** the entire state of WebGL easily like in a 2D canvas. Multistate manages the global state only and is not concerned with any properties or content of any textures, buffers, VAOs etc. It also adds cache checks for all the global-state-setting functions to prevent redundant WebGL API calls.
 
 ## Handles
-1. Global settings including viewport, culling, blending, and stencil.
-2. State toggles managed by gl.enable and gl.disable.
-3. Options configured with pixelStorei.
-4. Currently bound textures.
-5. Currently bound framebuffers with their read/draw buffers settings.
-6. Current VAO and UBO.
-7. Current program.
+1. Global settings including viewport, culling, blending, stencil etc.
+2. State toggles managed by gl.enable and gl.disable
+3. Options configured with pixelStorei
+4. Currently bound textures
+5. Currently bound framebuffers with their read/draw buffers settings
+6. Current VAO and UBO
+7. Current program
 
 ## Is not concerned with
-1. Uniforms and attributes.
-2. Any individual buffer settings or content.
-3. Any individual texture settings or content.
+1. Uniforms and attributes
+2. Any individual buffer settings or content
+3. Any individual texture settings or content
 
 ## Quick start
 
