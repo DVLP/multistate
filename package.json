@@ -8,9 +8,13 @@
     "default": "./index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "uglifyjs index.js --compress dead_code --define DEV_MODE=false -o index.min.js"
   },
   "author": "Pawel",
   "license": "MIT",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "uglify-js": "^3.19.3"
+  }
 }
