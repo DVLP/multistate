@@ -174,6 +174,7 @@ function wrapStatefulGLFunctions(gl) {
     if (gl.state.blendEquationRgb === modeRGB && gl.state.blendEquationAlpha === modeAlpha) return
     gl.state.blendEquationRgb = modeRGB
     gl.state.blendEquationAlpha = modeAlpha
+    DEV_MODE && recording && history.push(['blendEquationSeparate', modeRGB, modeAlpha])
     originalBlendEquationSeparate.call(gl, modeRGB, modeAlpha)
   }
 
@@ -484,6 +485,73 @@ function wrapStatefulGLFunctions(gl) {
     gl.state.feats[feature] = false
     DEV_MODE && recording && history.push(['disable', feature])
     return originalDisable.call(gl, feature)
+  }
+
+  gl.isEnabled = function isEnabled(feature) {
+    return gl.state.feats[feature]
+  }
+
+  const originalGetParameter = gl.getParameter
+  gl.getParameter = function getParameter(param) {
+    switch (param) {
+      case gl.ACTIVE_TEXTURE: return state.activeTexture
+      case gl.VIEWPORT: return state.viewport
+      case gl.BLEND_COLOR: return state.blendColor
+      case gl.BLEND_EQUATION_RGB: return state.blendEquationRgb
+      case gl.BLEND_EQUATION_ALPHA: return state.blendEquationAlpha
+      case gl.CULL_FACE_MODE: return state.cullFaceMode
+      case gl.DEPTH_FUNC: return state.depthFunc
+      case gl.FRONT_FACE: return state.frontFace
+      case gl.LINE_WIDTH: return state.lineWidth
+      case gl.BLEND_SRC_RGB: return state.blendFuncSeparate[0]
+      case gl.BLEND_DST_RGB: return state.blendFuncSeparate[1]
+      case gl.BLEND_SRC_ALPHA: return state.blendFuncSeparate[2]
+      case gl.BLEND_DST_ALPHA: return state.blendFuncSeparate[3]
+      case gl.COLOR_CLEAR_VALUE: return state.clearColor
+      case gl.COLOR_WRITEMASK: return state.colorMask
+      case gl.DEPTH_CLEAR_VALUE: return state.clearDepth
+      case gl.DEPTH_WRITEMASK: return state.depthMask
+      case gl.DEPTH_RANGE: return state.depthRange
+      case gl.POLYGON_OFFSET_FACTOR: return state.polygonOffset[0]
+      case gl.POLYGON_OFFSET_UNITS: return state.polygonOffset[1]
+      case gl.SAMPLE_COVERAGE_VALUE: return state.sampleCoverage[0]
+      case gl.SAMPLE_COVERAGE_INVERT: return state.sampleCoverage[1]
+      case gl.SCISSOR_BOX: return state.scissor
+      case gl.STENCIL_FUNC: return state.stencilFunc[0]
+      case gl.STENCIL_REF: return state.stencilFunc[1]
+      case gl.STENCIL_VALUE_MASK: return state.stencilFunc[2]
+      case gl.STENCIL_FAIL: return state.stencilOp[0]
+      case gl.STENCIL_PASS_DEPTH_FAIL: return state.stencilOp[1]
+      case gl.STENCIL_PASS_DEPTH_PASS: return state.stencilOp[2]
+      case gl.STENCIL_WRITEMASK: return state.stencilMask
+      case gl.STENCIL_CLEAR_VALUE: return state.clearStencil
+      case gl.STENCIL_BACK_FUNC: return state.stencilBackFunc[0]
+      case gl.STENCIL_BACK_REF: return state.stencilBackFunc[1]
+      case gl.STENCIL_BACK_VALUE_MASK: return state.stencilBackFunc[2]
+      case gl.STENCIL_BACK_FAIL: return state.stencilBackOp[0]
+      case gl.STENCIL_BACK_PASS_DEPTH_FAIL: return state.stencilBackOp[1]
+      case gl.STENCIL_BACK_PASS_DEPTH_PASS: return state.stencilBackOp[2]
+      case gl.STENCIL_BACK_WRITEMASK: return state.stencilBackMask
+      case gl.CURRENT_PROGRAM: return sgl.activeProgram
+      case gl.ARRAY_BUFFER_BINDING: return sgl.arrayBufferBinding
+      case gl.ELEMENT_ARRAY_BUFFER_BINDING: return sgl.elementArrayBufferBinding
+      case gl.UNIFORM_BUFFER_BINDING: return sgl.uniformBufferBinding
+      case gl.VERTEX_ARRAY_BINDING: return sgl.vertexArrayBinding
+      // pixelStorei
+      case gl.PACK_ALIGNMENT:
+      case gl.UNPACK_ALIGNMENT:
+      case gl.UNPACK_FLIP_Y_WEBGL:
+      case gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL:
+      case gl.UNPACK_COLORSPACE_CONVERSION_WEBGL:
+      case gl.UNPACK_ROW_LENGTH:
+      case gl.UNPACK_SKIP_ROWS:
+      case gl.UNPACK_SKIP_PIXELS:
+      case gl.PACK_ROW_LENGTH:
+      case gl.PACK_SKIP_PIXELS:
+      case gl.PACK_SKIP_ROWS:
+        return state.storei[param]
+      default: return originalGetParameter.call(gl, param)
+    }
   }
 
   // Debug use only
